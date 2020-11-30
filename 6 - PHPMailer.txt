@@ -1,0 +1,138 @@
+***********************
+****esqueciSenha.php***
+***********************
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Minha Loja - Logon de usuário</title>
+	
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	
+<style>
+
+.navbar{
+	margin-bottom: 0;
+}
+	
+	
+</style>
+	
+	
+</head>
+
+<body>
+	
+<?php
+	
+	include 'conexao.php';	
+	include 'nav.php';
+	include 'cabecalho.html';
+	
+	?>
+	
+	
+	<div class="container-fluid">
+	
+		<div class="row">
+		
+			<div class="col-sm-4 col-sm-offset-4">
+				
+				<h2>Digite o email cadastrado </h2>
+				
+				<form method="post" action="enviarEmail.php" name="logon">
+				
+					<div class="form-group">
+				
+						<input name="email" type="email" class="form-control" required id="email">
+					</div>
+				
+				
+							
+				<button type="submit" class="btn btn-lg btn-default">
+					
+					<span class="glyphicon glyphicon-envelope"> Enviar</span>
+					
+				</button>
+				
+				</form>
+				
+				<a href="formUsuario.php">
+				<button type="submit" class="btn btn-lg btn-link">
+					
+					Ainda não sou cadastrado
+					
+				</button>
+				</a>
+			</div>
+		</div>
+	</div>
+	
+	<?php include 'rodape.html' ?>
+	
+	
+	
+	
+</body>
+</html>
+
+
+
+*****************************************************************
+https://myaccount.google.com/u/0/lesssecureapps?pli=1
+
+*******************************************************************
+
+		$exibe=$consulta->fetch(PDO::FETCH_ASSOC);
+		
+		$recebe_nome=$exibe['nome'];
+		$recebe_senha=$exibe['senha'];
+		
+		include 'class.phpmailer.php';
+		include 'class.smtp.php';
+		include 'PHPMailerAutoload.php';
+		
+	
+		
+		$mail = new PHPMailer;
+		
+		$mail->isSMTP();
+		$mail->CharSet = 'UTF-8';
+		$mail->SMTPDebug = 2;
+		$mail->Host = 'smtp.gmail.com';
+		$mail->Port = 587;
+		$mail->SMTPSecure = 'tls';
+		$mail->SMTPAuth = true;
+		$mail->Username = "origem@gmail.com";
+		$mail->Password = "Senha";
+		$mail->setFrom('origem@gmail.com', 'Minha Loja');
+		$mail->addReplyTo('origem@gmail.com', 'Minha Loja');
+		$mail->addAddress($recebe_email, $recebe_nome);
+		$mail->Subject = 'Recuperação de Senha || Minha Loja';
+		$mail->msgHTML('Sua Senha na minha loja é:'.$recebe_senha);
+		
+		
+		$mail->SMTPOptions = array(
+		'ssl' => array(
+        	'verify_peer' => false,
+        	'verify_peer_name' => false,
+        	'allow_self_signed' => true
+    		)
+		);
+		
+		
+		if (!$mail->send()) {
+			echo "ERRO::::: " . $mail->ErrorInfo;
+		} else {
+			echo "Mensagem enviada!!!";
+		}
